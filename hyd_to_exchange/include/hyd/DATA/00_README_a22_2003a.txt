@@ -1,0 +1,95 @@
+# These data were provided by:
+#
+# PARAMETER/PROGRAM   NAME                    EMAIL ADDRESS
+# -----------------   ----                    --------------
+# Chief Scientist     Terrence Joyce-WHOI     tjoyce@whoi.edu
+# Co-Chief Scientist  William Smethie-LDEO    bsmeth@ldeo.columbia.edu
+# CTDO/S/O2/Nutrients James Swift-SIO         jswift@ucsd.edu
+# DIC                 Richard Feely-PMEL      Richard.A.Feely@noaa.gov
+#                     Chris Sabine-PMEL       Chris.Sabine@noaa.gov
+# CFC                 William Smethie-LDEO    bsmeth@ldeo.columbia.edu
+#                     Rana Fine-UofMiami      rfine@rsmas.miami.edu
+# TALK                Frank Millero-UofMiami  fmillero@rsmas.miami.edu
+# CDOM, DOC, DON      Craig Carlson-UCSB      carlson@lifesci.ucsb.edu
+# He/Tr               William Jenkins-WHOI    wjenkins@whoi.edu
+# Surface C14         Ann McNichol-WHOI       amcnichol@whoi.edu
+#                     Robert Key-Princeton    rkey@princeton.edu
+# C13 profiles        Paul Quay-UofWash       pdquay@u.washington.ed
+#
+# The data included in these files are preliminary, and are
+# subject to final calibration and processing. They have been
+# made available for public access as soon as possible following
+# their collection.  Users should maintain caution in their
+# interpretation and use. Following American Geophysical Union
+# recommendations, the data should be cited as: "data
+# provider(s), cruise name or cruise ID, data file name(s),
+# CLIVAR and Carbon Hydrographic Data Office, La Jolla, CA,
+# USA, and data file date." For further information, please
+# contact one of the parties listed above or whpo@ucsd.edu.
+# Users are also requested to acknowledge the NSF/NOAA-funded
+# U.S. Repeat Hydrography Program in publications resulting
+# from their use.
+#
+# --> HISTORY
+#
+#
+# Jan. 13, 2005 
+#
+# Merged the final alkalinity submitted by A. Kozyr on Jan. 12, 2005
+# into the online file.  Made new exchange and netcdf files.
+#
+# Sarilee Anderson
+#
+#
+# Feb. 2, 2005
+#
+# Merged the CFC-11, CFC-12, CFC-113, and CCL4 submitted by D. Willey
+# on Feb. 2, 2005.  Made new exchange and netcdf files.
+#
+# Sarilee Anderson
+# 
+# 
+# May 23, 2005 
+#
+# Made changes to TCO2 flags re Kozyr's email (see below).
+#
+# Sarilee Anderson 
+#
+# 
+# Date: Mon, 21 Mar 2005 15:36:39 -0500
+# From: Alexander Kozyr <kozyra@ornl.gov>
+# Subject: A22_2003 repeat data
+# To: "S. Diggs" <sdiggs@ucsd.edu>
+# Cc: Danielle Bartolacci <danie@odf.ucsd.edu>, whpo@ucsd.edu
+# 
+# Dear Steve, Danielle,
+# Could you please apply some quality flags changes in your *hy.txt and hy1.csv 
+# files for the A22_2003 cruise TCO2 data as follows:
+# 
+# sta-cast-bot flag
+# 1-1-3 hi vs P flag 3
+# 10-1-20 hi vs P flag 3
+# 14-1-16 low vs P and alkf=4, flag all 3
+# 16-1-8 flier flag 4
+# 41-1-28 hi vs P flag 3
+# 41-1-29 hi vs P flag 3
+# 42-1-13 hi vs P flag 3
+# 
+# Thank you,
+# Alex.
+# 
+# -- 
+# *******************************************
+# Alex Kozyr
+# Carbon Dioxide Information Analysis Center
+# Environmental Sciences Division
+# Oak Ridge National Laboratory
+# U.S. Department of Energy
+# Building 1509, Mail Stop 6335
+#  Oak Ridge, TN 37831-6335 U.S.A.
+# 
+# tel  1-865-576-8449
+# fax  1-865-574-2232
+# 
+# Electronic address:  kozyra@ornl.gov
+# Ocean CO2 WWW Page: http://cdiac.ornl.gov/oceans/home.html
