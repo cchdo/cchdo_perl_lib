@@ -1,38 +1,30 @@
 #!/usr/bin/perl -w
 #-----------------------------------------------------------------
-# EXCTD_TO_NETCDF:	
-#		a Perl script that reads in and decode a WHP-CTD
+# READ_EXCTD:	a Perl script that reads in and decode a WHP-CTD
 #		exchange formatted file and places all of the data
-#		into a structure ready to be written into a NetCDF file.
-#		Taken from read_exctd.pl
+#		into a structure ready to be written into another
+#		form.
 #
 #
 #	S. Diggs:	2001.10.30:	initial coding
-#
 #	S. Diggs:	2002.04.15:	changed 'seconds since
 #					01-01-1980' to 'minutes
 #					since 01-01-1980' to match
 #					the time coordinates of the
 #					other WOCE DACS.
-#
-#	S. Diggs:	2002.05.08	changed the output filenames
-#					from *ct1* to *ctd*.
-#
 #-----------------------------------------------------------------
 
-my $code_directory = "/admin_home/sdiggs/tools/EXCHANGE_V2/CODE/EXCTD_NETCDF/";
+my $code_directory = "/admin_home/sdiggs/tools/EXCHANGE_V2/CODE/READ_EXCTD/";
 #my $code_directory = "/Users/sdiggs/tools/EXCHANGE_V2/CODE/READ_EXCTD/";
 
 require $code_directory . "read_anyfile.pl";
 require $code_directory . "find_minmax.pl";
 require $code_directory . "woce_calc_minutes.pl";
-require $code_directory . "write_ctd_netcdf.pl";
 #require $code_directory . "woce_calc_seconds.pl";
 
 my ($input_filename, %input_hash, @input_lines);
 my (@original_param_units, @original_param_names);
 my ($number_headers, %ctd_meta, %ctd_data, %ctd_units);
-my (%ctd_min, %ctd_max);
 
 print STDOUT "Please enter filename: ";
 chomp($input_filename=<STDIN>);
@@ -44,13 +36,6 @@ chomp($input_filename=<STDIN>);
 @tmp_file_array = split(/\//, $input_filename); 
 @tmp_file_array = split(/\./, $tmp_file_array[$#tmp_file_array]);
 $netcdf_filename = $tmp_file_array[0] . ".nc";
-
-#
-#--> Change output filenames to *ctd* (NOT *ct1*) 
-#--> J. Weir and S.Diggs: 20020508
-#
-$netcdf_filename =~ s/ct1/ctd/g; 
-
 print STDOUT "Output file will be--> $netcdf_filename\n";
 
 #
@@ -80,7 +65,7 @@ for ($i=0 ; $i <= $#input_lines ; $i++)	{
 	}
 }
 print STDOUT "\$i = $i\n";
-print STDOUT "----\n",join("\n ++", @original_param_names), "\n";
+print STDOUT "----\n",join("\n", @original_param_names), "\n";
 
 #assume that the next header tells how many more lines there are
 print STDOUT "-------\n";
@@ -172,32 +157,14 @@ foreach my $z (sort keys %ctd_data)	{
 }
 
 my ($ctdsal_min, $ctdsal_max) = &find_minmax( @{$ctd_data{'CTDSAL'}} );
-	$ctd_min{'CTDSAL'} = $ctdsal_min;
-	$ctd_max{'CTDSAL'} = $ctdsal_max;
-	print STDOUT "CTDSAL min and max are --> "
-			. $ctd_min{'CTDSAL'} . ' | ' 
-			. $ctd_max{'CTDSAL'} . "\n";
-
 my ($ctdoxy_min, $ctdoxy_max) = &find_minmax( @{$ctd_data{'CTDOXY'}} );
-	$ctd_min{'CTDOXY'} = $ctdoxy_min;
-	$ctd_max{'CTDOXY'} = $ctdoxy_max;
-	print STDOUT "CTDOXY min and max are --> "
-			. $ctd_min{'CTDOXY'} . ' | ' 
-			. $ctd_max{'CTDOXY'} . "\n";				
-
 my ($ctdtmp_min, $ctdtmp_max) = &find_minmax( @{$ctd_data{'CTDTMP'}} );
-	$ctd_min{'CTDTMP'} = $ctdtmp_min;
-	$ctd_max{'CTDTMP'} = $ctdtmp_max;
-	print STDOUT "CTDTMP min and max are --> "
-			. $ctd_min{'CTDTMP'} . ' | ' 
-			. $ctd_max{'CTDTMP'} . "\n";
-			
 my ($ctdprs_min, $ctdprs_max) = &find_minmax( @{$ctd_data{'CTDPRS'}} );
-	$ctd_min{'CTDPRS'} = $ctdprs_min;
-	$ctd_max{'CTDPRS'} = $ctdprs_max;
-	print STDOUT "CTDPRS min and max are --> "
-			. $ctd_min{'CTDPRS'} . ' | ' 
-			. $ctd_max{'CTDPRS'} . "\n";
+
+print STDOUT "CTDSAL min and max are --> $ctdsal_min | $ctdsal_max\n";
+print STDOUT "CTDOXY min and max are --> $ctdoxy_min | $ctdoxy_max\n";
+print STDOUT "CTDTMP min and max are --> $ctdtmp_min | $ctdtmp_max\n";
+print STDOUT "CTDPRS min and max are --> $ctdprs_min | $ctdprs_max\n";
 
 # Finish up with inventory information
 
@@ -240,19 +207,11 @@ if (!(-e $inventory_filename))	{
 #
 #--> Write NetCDF file
 #
-print STDOUT "--> Writing NetCDF file: $netcdf_filename \n";
+print STDOUT "\t\t --> Writing NetCDF file: netcdf_filename\n;"
 
-&write_ctd_netcdf($netcdf_filename,	\%ctd_data, 
-					\%ctd_meta,
-					\%ctd_units,
-					\%ctd_min,
-					\%ctd_max,
-					\@original_param_names);
+#&write_ctd_netcdf();
 
-#
-#--> Write to the inventory file (if it exists)
-#
-print INVENTORY join("\t", (	
+#print INVENTORY join("\t", (	
 				
 				"WHP",
 				"<pathname>", 
