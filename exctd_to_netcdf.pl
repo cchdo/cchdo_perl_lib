@@ -20,7 +20,7 @@
 #
 #-----------------------------------------------------------------
 
-my $code_directory = "/admin_home/sdiggs/tools/EXCHANGE_V2/CODE/EXCTD_NETCDF/";
+my $code_directory = "/usr/local/cchdo_perl_lib/exchange_to_netcdf_ctd/";
 #my $code_directory = "/Users/sdiggs/tools/EXCHANGE_V2/CODE/READ_EXCTD/";
 
 require $code_directory . "read_anyfile.pl";

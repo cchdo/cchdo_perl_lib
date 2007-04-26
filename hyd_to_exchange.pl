@@ -73,15 +73,15 @@ use File::stat;
 use Time::localtime;
 
 #INCLUDES
-require "/home/jjward/src/exchange_format/whp_to_exchange_code/hyd/hyd_get_hyddata.pl";
-require "/home/jjward/src/tools/PERL/get_decplaces.pl";
+require "/usr/local/cchdo_perl_lib/hyd_get_hyddata.pl";
+require "/usr/local/cchdo_perl_lib/get_decplaces.pl";
 #require "/home/whpo/jjward/src/exchange_format/whp_to_exchange_code/hyd/hyd_exchange_params.pl";
 #require "/home/whpo/jjward/src/exchange_format/whp_to_exchange_code/exchange_param_format.pl";
-require "/home/jjward/src/exchange_format/whp_to_exchange_code/get_whpo_timestamp.pl";
-require "/home/jjward/src/exchange_format/whp_to_exchange_code/round_float.pl";
-require "/home/jjward/src/exchange_format/whp_to_exchange_code/hyd/where_is_this_script.pl";
+require "/usr/local/cchdo_perl_lib/get_whpo_timestamp.pl";
+require "/usr/local/cchdo_perl_lib/round_float.pl";
+require "/usr/local/cchdo_perl_lib/hyd/where_is_this_script.pl";
 #use lib "/home/bren/perllib";
-use lib "/home/jjward/src/exchange_format/whp_to_exchange_code/hyd";
+use lib "/usr/local/cchdo_perl_lib/hyd";
 use GetExchangeParams;
 use SortExchangeParams;
 

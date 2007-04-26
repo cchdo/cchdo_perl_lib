@@ -16,7 +16,7 @@
 #-----------------------------------------------------------------
 
 my $code_directory = 
-	"/admin_home/sdiggs/tools/EXCHANGE_V2/CODE/EXBOT_NETCDF_NEW/";
+	"/usr/local/cchdo_perl_lib/common_tools/";
 
 require $code_directory . "read_anyfile.pl";
 require $code_directory . "find_minmax_new.pl";

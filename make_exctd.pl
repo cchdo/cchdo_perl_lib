@@ -28,7 +28,7 @@ my $software_version = "CTD_Exchange_Encode_v1.1(CCHDO/Diggs)";
 
 print STDERR "This software version is: $software_version\n\n";
 
-my $basedir = "/admin_home/sdiggs/tools/EXCHANGE_V2/CODE/";
+my $basedir = "/usr/local/cchdo_perl_lib/common_tools/";
 @INC =  ($basedir , @INC);
 
 #print STDERR '@INC: ' , "\n", join("\n", @INC) , "\n\n";
