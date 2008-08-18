@@ -1,0 +1,147 @@
+# Exchange format parameters.
+#
+# Add them with each parameter on it's own line, followed by a comma and then
+# its format/precision. Look through the existing list if you need an example.
+#
+# NOTE: The parameters are ordered by the desired appearance in the table.
+#
+# Empty lines and lines that begin with a '#' are ignored as comments.
+#
+# CHANGELOG
+# Updated to 90 total parameters by S. Diggs (20030501), to include the
+# following from Alex Kozyr: STHETA, FCO220C, FCO2IN, TOC, and TON
+# Updated to 91 total parameters by S. Diggs (20030926), to include TALK
+# Updated to 92 total parameters by S. Diggs (20031022), to include SF6
+# Updated to 93 total parameters by S. Diggs (20040128), to include BARIUM
+# Updated to 94 total parameters by S. Diggs (20040707), to include ALUMIN
+# Updated PH to 9.4 precision:  S. Diggs (20040707)
+# Updated to 96 total parameters by S. Diggs (20040707), to include I129
+#and I129ER (Iodine isotope 129, per Dave Muus's 10/28/2004 req.)
+# Changed I129 to I-129 for consistency (S. Diggs: 20041111)
+# Added DOC and PH_{1-9} for 10 institutions to have their own PH var.
+# M. Shen (2008-07-23) 	added CDOM{,325,340,380,412,443,490,555,SL,SN} and 
+#			BIONBR (117 parameters)
+# M. Shen (2008-08-01) 	changed DOC format 8.2f -> 9.4f, and reordered to
+#			facilitate removal of SortExchangeParams
+# M. Shen (2008-08-18) 	reverted DOC format 9.4f -> 8.2f, added TDN,%8.2f for Danie
+#-------------------------------------------------------------------------------
+EXPOCODE,%14s
+SECT_ID,%6s
+STNNBR,%6s
+CASTNO,%3s
+SAMPNO,%7s
+BTLNBR,%7s
+DATE,%8s
+TIME,%4s
+LATITUDE,%8.4f
+LONGITUDE,%9.4f
+DEPTH,%5d
+CTDRAW,%7s
+CTDPRS,%9.1f
+CTDTMP,%9.4f
+CTDSAL,%9.4f
+SALNTY,%9.4f
+CTDOXY,%9.1f
+THETA,%8.4f
+OXYGEN,%9.1f
+SILCAT,%9.2f
+NITRAT,%9.2f
+NITRIT,%9.2f
+NO2+NO3,%9.2f
+PHSPHT,%9.2f
+CFC-11,%9.3f
+CFC-12,%9.3f
+CFC113,%9.3f
+CCL4,%9.3f
+TRITUM,%9.3f
+HELIUM,%9.4f
+DELHE3,%9.2f
+DELC14,%9.1f
+DELC13,%9.2f
+NEON,%8.3f
+O18O16,%9.2f
+TCARBN,%9.1f
+PCO2,%9.1f
+ALKALI,%9.1f
+PH,%9.4f
+PH_1,%9.4f
+PH_2,%9.4f
+PH_3,%9.4f
+PH_4,%9.4f
+PH_5,%9.4f
+PH_6,%9.4f
+PH_7,%9.4f
+PH_8,%9.4f
+PH_9,%9.4f
+# CDOM
+CDOM,%9.4f
+CDOM325,%9.4f
+CDOM340,%9.4f
+CDOM380,%9.4f
+CDOM412,%9.4f
+CDOM443,%9.4f
+CDOM490,%9.4f
+CDOM555,%9.4f
+CDOMSL,%9.4f
+CDOMSN,%9.4f
+BIONBR,%9.4f
+DOC,%8.2f
+# Alphabetical
+ALUMIN, %8.2f
+AR-39,%8.1f
+ARGON,%8.2f
+AZOTE,%8.1f
+BARIUM,%8.1f
+BEDFORT,%8s
+C113ER,%8.3f
+C13ERR,%8.1f
+C14ERR,%8.1f
+CCL4ER,%8.3f
+CF113ER,%8.3f
+CF11ER,%8.3f
+CF12ER,%8.3f
+CH4,%8.2f
+CHLA,%8.2f
+CHLORA,%8.2f
+CS-137,%8.2f
+DELHE,%8.2f
+DELHER,%8.2f
+DELHER,%8.3f
+DON,%8.1f
+# Exchange format parameters.
+FCO220C,%8.1f
+FCO2,%8.1f
+FCO2IN,%8.1f
+FCO2TMP,%8.2f
+HELIER,%8.4f
+IODATE,%8.3f
+IODIDE,%8.3f
+I-129,%8.2f
+I129ER,%8.1f
+KR-85,%8.2f
+MCHFRM,%8.3f
+METHAN,%8.2f
+N2O,%8.2f
+NEONER,%8.3f
+NH4,%8.3f
+O16/O16,%8.2f
+O18/O16,%8.2f
+OXYNIT,%8.2f
+PCO2TMP,%8.2f
+PHAEO,%8.2f
+PHTEMP,%8.2f
+PPHYTN,%8.2f
+RA-226,%8.2f
+RA-228,%8.2f
+REVPRS,%8.1f
+REVTMP,%8.3f
+SF6,%8.2f
+SR-90,%8.2f
+STHETA,%8.4f
+TALK,%8.1f
+TCO2,%8.1f
+TCO2TMP,%8.2f
+TDN,%8.2f
+TOC,%8.2f
+TON,%8.2f
+TRITER,%8.3f
