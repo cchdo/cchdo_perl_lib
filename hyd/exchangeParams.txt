@@ -24,6 +24,7 @@
 # M. Shen (2008-08-01) 	changed DOC format 8.2f -> 9.4f, and reordered to
 #			facilitate removal of SortExchangeParams
 # M. Shen (2008-08-18) 	reverted DOC format 9.4f -> 8.2f, added TDN,%8.2f for Danie
+# M. Shen (2008-08-21)  removed extra DELHER found by Steve.
 #-------------------------------------------------------------------------------
 EXPOCODE,%14s
 SECT_ID,%6s
@@ -106,7 +107,6 @@ CHLORA,%8.2f
 CS-137,%8.2f
 DELHE,%8.2f
 DELHER,%8.2f
-DELHER,%8.3f
 DON,%8.1f
 # Exchange format parameters.
 FCO220C,%8.1f
