@@ -23,12 +23,18 @@
 #					CASTNO & STNNBR a length, and 
 #					added CASTNO & STNNBR as attributes.
 #
+#	S. Diggs:	2006.05.06	Version 1.3n (on new CCHDO)
+#					somehow, the code was getting a seg
+#					fault due to arrays being too small
+#					by one element.  Fixed pressure dim
+#					(increased by 1) and all was well.
+#
 #
 #---------------------------------------------------------------------------
 
 sub write_ctd_netcdf	{
 
-	use NetCDF;
+	use netCDF;
 	
 	my $netcdf_filename 	= shift(@_);
 	my $ctd_data_ref	= shift(@_);
@@ -48,7 +54,8 @@ sub write_ctd_netcdf	{
 	
 	#set the creation time	
 	my $utc_time = gmtime();
-	my $file_write_time = "Diggs Code Version 1.2: " . $utc_time . " GMT";
+	my $file_write_time =  "Diggs Code Version 1.3n: " . $utc_time . " GMT";
+	#my $file_write_time = "Diggs Code Version 1.2: " . $utc_time . " GMT";
 	#my $file_write_time = "Diggs Code Version 1.1: " . $utc_time . " GMT";
 	#my $file_write_time = "Diggs Code Version 1.0: " . $utc_time . " GMT";
 	
@@ -72,7 +79,8 @@ sub write_ctd_netcdf	{
 		print "NETCDF: ctd_max $stuff\t=\t$ctd_max{$stuff}\n";
 	}
 		
-	$ctd_pressure_dimension = $#{$ctd_data{'CTDPRS'}};
+	# added "1" to pressure dimension (SCD: 20060503)	
+	$ctd_pressure_dimension = ($#{$ctd_data{'CTDPRS'}} + 1);
 	
 	print STDOUT "NETCDF module!\n";
 	print STDOUT "Writing $netcdf_filename\n";
@@ -83,6 +91,7 @@ sub write_ctd_netcdf	{
 my $string_dimension = 40;
 
 my $ncid	= NetCDF::create($netcdf_filename, NetCDF::WRITE);
+use NetCDF;
 
 #
 #-->Dimension variables
@@ -146,6 +155,11 @@ NetCDF::attput($ncid, NetCDF::GLOBAL, "WOCE_CTD_FLAG_DESCRIPTION", NetCDF::CHAR,
 #
 #--> Variable definitions
 #
+
+#DEBUG: SCD 20050926
+print STDOUT '*******', "Time_ID is $time_id", '*******', "\n";
+
+
 my $varid_time	= 
 	NetCDF::vardef($ncid, 'time', 	NetCDF::LONG,	$time_id);
 	my $attid = NetCDF::attput($ncid, $varid_longitude, "long_name",
@@ -364,6 +378,7 @@ NetCDF::endef($ncid);
 my @start 	= (0);
 my @single	= (1);
 my @string_cnt	= (40);
+#my @count =($ctd_pressure_dimension);
 my @count =($ctd_pressure_dimension);
 
 #----------------------------------TIME
@@ -373,41 +388,55 @@ NetCDF::varput($ncid, $varid_time,	\@start, \@single,
 
 #----------------------------------PRESSURE
 my @transfer_array = @{$ctd_data{'CTDPRS'}};
-print STDOUT "\tDoing PRESSURE\n";
+print STDOUT "\tDoing PRESSURE whose last index is ",  $#{$ctd_data{'CTDPRS'}}, "\n";
+
+print STDOUT "\t==> First and last are: $transfer_array[0] and $transfer_array[$#transfer_array]\n";
+
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
+
+@count = ($#{$ctd_data{'CTDPRS'}} + 1);
+
 NetCDF::varput($ncid, $varid_pressure,	\@start, \@count,	
 		 \@transfer_array );		 
 @transfer_array = @{$ctd_data{'CTDPRS_FLAG_W'}};
 print STDOUT "\tDoing PRESSURE FLAGS\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_pressure_QC,	\@start, \@count,	
 		 \@transfer_array );
 		 
 #----------------------------------TEMPERATURE
 @transfer_array = @{$ctd_data{'CTDTMP'}};
 print STDOUT "\tDoing TEMPERATURE\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_temperature,	\@start, \@count,	
 		 \@transfer_array );	 
 @transfer_array = @{$ctd_data{'CTDTMP_FLAG_W'}};
 print STDOUT "\tDoing TEMPERATURE FLAGS\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_temperature_QC,	\@start, \@count,	
 		 \@transfer_array );	
 		 	
 #----------------------------------SALINITY
 @transfer_array = @{$ctd_data{'CTDSAL'}};
 print STDOUT "\tDoing CTD SALINITY\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_salinity,	\@start, \@count,	
 		 \@transfer_array );	 
 @transfer_array = @{$ctd_data{'CTDSAL_FLAG_W'}};
 print STDOUT "\tDoing CTD SALINITY FLAGS\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_salinity_QC,	\@start, \@count,	
 		 \@transfer_array );
 		 
 #----------------------------------OXYGEN
 @transfer_array = @{$ctd_data{'CTDOXY'}};
 print STDOUT "\tDoing CTD OXYGEN\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_oxygen,	\@start, \@count,	
 		 \@transfer_array );	 
 @transfer_array = @{$ctd_data{'CTDOXY_FLAG_W'}};
 print STDOUT "\tDoing CTD OXYGEN FLAGS\n";
+print STDOUT "Data array is: ", join(',', @transfer_array), "\n---\n";
 NetCDF::varput($ncid, $varid_oxygen_QC,	\@start, \@count,	
 		 \@transfer_array );
 		 

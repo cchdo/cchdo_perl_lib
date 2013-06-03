@@ -1,0 +1,271 @@
+#!/usr/bin/perl
+#------------------------------------------------------------------
+#	WHP_PARAM_INFO:	make a hash with the appropriate C-style
+#			format and formal parameter name.
+#
+#	S. Diggs:	2002.04.25:	initial coding and design
+#	H. Buck:	2002.04.26:	additions and corrections
+#	S. Diggs:	2002.04.30:	final polish
+#	S. Diggs:	2002.07.31	more polish: added stuff
+#					for O18/O16 and corrected
+#					numerous formatting errors
+#	S. Diggs:	2002.10.18	changed DELC13 format from
+#					f8.1 to f8.2 
+#	S. Diggs:	2003.05.07	added TOC,TON, FCO2IN, 
+#					FCO220C and STHETA
+#					(per A. Kozyr) 
+#	S. Diggs:	2003.10.08	added total alkalinity
+#					(TALK)
+#	S. Diggs:	2003.10.22	added sulphurhexaflouride
+#					(SF6)
+#	S. Diggs:	2004.01.28	added barium (BARIUM)
+#	S. Diggs:	2004.10.11	made CTDRAW format %8.1f
+#					(was ' %7s')
+#	S. Diggs:	2004.11.10	added I129 and I129ER
+#					(iodine isotope 129 and error)
+#	S. Diggs:	2004.11.11	changed I129 to I-129
+#	S. Diggs:	2007.01.10	added TDN 
+#					(total dissolved nitrogen)
+#	S. Diggs:	2007.05.24	added PCO2_20/T, PH_UM, etc.
+#	M. Shen:	2009.04.24	added PROC, SYNN, REFTEMP,
+#					PH_SWS, PH_TOT, PH_TEMP, 
+#					O18O16, BTL_LAT, BTL_LON
+#------------------------------------------------------------------
+sub whp_param_info {
+
+	#
+	#--> Define the parameter formats
+	#
+	$param_info{'STNNBR'}{'C_FORMAT'}	= '%8s';
+	$param_info{'STNNBR'}{'LONGNAME'}	= 'station_number';
+	$param_info{'CASTNO'}{'C_FORMAT'}	= '     %3d';
+	$param_info{'CASTNO'}{'LONGNAME'}	= 'cast_number';
+	$param_info{'BTLNBR'}{'C_FORMAT'}	= ' %7s';
+	$param_info{'BTLNBR'}{'LONGNAME'}	= 'bottle_number';
+	$param_info{'SAMPNO'}{'C_FORMAT'}	= ' %7s';
+	$param_info{'SAMPNO'}{'LONGNAME'}	= 'sample_number';
+	$param_info{'QUALT1'}{'C_FORMAT'}	= '%d';
+	$param_info{'QUALT1'}{'LONGNAME'}	= 'quality_1_flag';
+	$param_info{'QUALT2'}{'C_FORMAT'}	= '%d';
+	$param_info{'QUALT2'}{'LONGNAME'}	= 'quality_2_flag';
+	
+	$param_info{'CTDRAW'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'CTDRAW'}{'LONGNAME'}	= 'ctd_raw';
+	$param_info{'CTDTMP'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'CTDTMP'}{'LONGNAME'}	= 'temperature';
+	$param_info{'CTDOXY'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'CTDOXY'}{'LONGNAME'}	= 'oxygen';
+	$param_info{'SALNTY'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'SALNTY'}{'LONGNAME'}	= 'bottle_salinity';
+	$param_info{'SILCAT'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'SILCAT'}{'LONGNAME'}	= 'silicate';
+	$param_info{'NO2_NO3'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'NO2_NO3'}{'LONGNAME'}	= 'nitrate_plus_nitrite';
+	$param_info{'NO2+NO3'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'NO2+NO3'}{'LONGNAME'}	= 'nitrate_plus_nitrite';
+	$param_info{'NITRIT'}{'C_FORMAT'}	= '%8.2';
+	$param_info{'NITRIT'}{'LONGNAME'}	= 'nitrite';
+	$param_info{'CFC-11'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CFC-11'}{'LONGNAME'}	= 'freon_11';
+	$param_info{'CF11ER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CF11ER'}{'LONGNAME'}	= 'freon_11_error';
+	$param_info{'CF12ER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CF12ER'}{'LONGNAME'}	= 'freon_12_error';
+	$param_info{'CFC113'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CFC113'}{'LONGNAME'}	= 'freon_113';
+	$param_info{'C113ER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'C113ER'}{'LONGNAME'}	= 'freon_113_error';
+	$param_info{'CCL4'}{'C_FORMAT'}		= '%8.3f';
+	$param_info{'CCL4'}{'LONGNAME'}		= 'carbon_tetrachloride';
+	$param_info{'REVPRS'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'REVPRS'}{'LONGNAME'}	= 'reversing_thermometer_pressure';
+	$param_info{'TRITUM'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'TRITUM'}{'LONGNAME'}	= 'tritium';
+	$param_info{'HELIUM'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'HELIUM'}{'LONGNAME'}	= 'helium';
+	$param_info{'DELHE'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'DELHE'}{'LONGNAME'}	= 'delta_helium';
+	$param_info{'DELHER'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'DELHER'}{'LONGNAME'}	= 'delta_helium_error';
+	$param_info{'DELC13'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'DELC13'}{'LONGNAME'}	= 'carbon_13';
+	$param_info{'NEON'}{'C_FORMAT'}		= '%8.3f';
+	$param_info{'NEON'}{'LONGNAME'}		= 'neon';
+	$param_info{'O16/O16'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'O18/O16'}{'LONGNAME'}	= 'o18_o16';
+	$param_info{'O18_O16'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'O18_O16'}{'LONGNAME'}	= 'o18_o16';
+	$param_info{'TRITER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'TRITER'}{'LONGNAME'}	= 'tritium_error';
+	$param_info{'C13ERR'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'C13ERR'}{'LONGNAME'}	= 'carbon_13_error';
+	$param_info{'TCARBN'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'TCARBN'}{'LONGNAME'}	= 'total_carbon';
+	$param_info{'PCO2'}{'C_FORMAT'}		= '%8.1f';
+	$param_info{'PCO2'}{'LONGNAME'}		= 'partial_pressure_of_co2';
+	$param_info{'TCO2'}{'C_FORMAT'}		= '%8.1f';
+	$param_info{'TCO2'}{'LONGNAME'}		= 'total_co2';
+	$param_info{'PCO2TMP'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PCO2TMP'}{'LONGNAME'}	= 'partial_co2_temperature';
+	$param_info{'PCO2_T'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PCO2_T'}{'LONGNAME'}	= 'partial_co2_temperature';
+	$param_info{'PCO2_20'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'PCO2_20'}{'LONGNAME'}	= 'partial_co2_temperature';
+	$param_info{'PH'}{'C_FORMAT'}		= '%8.4f';
+	$param_info{'PH'}{'LONGNAME'}		= 'ph';
+	$param_info{'KR-85'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'KR-85'}{'LONGNAME'}	= '85_krypton';
+	$param_info{'RA-228'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'RA-228'}{'LONGNAME'}	= '228_radium';
+	$param_info{'SR-90'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'SR-90'}{'LONGNAME'}	= '90_strontium';
+	$param_info{'IODATE'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'IODATE'}{'LONGNAME'}	= 'iodate';
+	$param_info{'NH4'}{'C_FORMAT'}		= '%8.3f';
+	$param_info{'NH4'}{'LONGNAME'}		= 'ammonium';
+	$param_info{'DON'}{'C_FORMAT'}		= '%8.1f';
+	$param_info{'DON'}{'LONGNAME'}		= 'nitrogen_dissolved_organic';
+	$param_info{'CHLORA'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'CHLORA'}{'LONGNAME'}	= 'chlorophyll_a';
+	$param_info{'BEDFORT'}{'C_FORMAT'}	= '%8s';
+	$param_info{'BEDFORT'}{'LONGNAME'}	= 'bedfort';
+	$param_info{'AZOTE'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'AZOTE'}{'LONGNAME'}	= 'azote';
+	$param_info{'CHLA'}{'C_FORMAT'}		= '%8.2f';
+	$param_info{'CHLA'}{'LONGNAME'}		= 'chla';
+	$param_info{'METHAN'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'METHAN'}{'LONGNAME'}	= 'methane';
+	$param_info{'CTDPRS'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'CTDPRS'}{'LONGNAME'}	= 'pressure';
+	$param_info{'CTDSAL'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'CTDSAL'}{'LONGNAME'}	= 'salinity';
+	$param_info{'THETA'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'THETA'}{'LONGNAME'}	= 'theta';
+	$param_info{'OXYGEN'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'OXYGEN'}{'LONGNAME'}	= 'bottle_oxygen';
+	$param_info{'NITRAT'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'NITRAT'}{'LONGNAME'}	= 'nitrate';
+	$param_info{'PHSPHT'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PHSPHT'}{'LONGNAME'}	= 'phosphate';
+	$param_info{'CFC-12'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CFC-12'}{'LONGNAME'}	= 'freon_12';
+	$param_info{'CFC-113'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CFC-113'}{'LONGNAME'}	= 'freon_113';
+	$param_info{'CF113ER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CF113ER'}{'LONGNAME'}	= 'freon_113_error';
+	$param_info{'CCL4ER'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'CCL4ER'}{'LONGNAME'}	= 'carbon_tetrachloride_error';
+	$param_info{'REVTMP'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'REVTMP'}{'LONGNAME'}	= 'reversing_thermometer_temperature';
+	$param_info{'DELC14'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'DELC14'}{'LONGNAME'}	= 'carbon_14';
+	$param_info{'DELHE3'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'DELHE3'}{'LONGNAME'}	= 'delta_helium_3';
+	$param_info{'ARGON'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'ARGON'}{'LONGNAME'}	= 'argon';
+	$param_info{'O18/O16'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'O18/O16'}{'LONGNAME'}	= 'oxy18_oxy16';
+	$param_info{'O18_O16'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'O18_O16'}{'LONGNAME'}	= 'oxy18_oxy16';	
+	$param_info{'HELIER'}{'C_FORMAT'}	= '%8.4f';
+	$param_info{'HELIER'}{'LONGNAME'}	= 'helium_error';
+	$param_info{'C14ERR'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'C14ERR'}{'LONGNAME'}	= 'carbon_14_error';
+	$param_info{'NEONER'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'NEONER'}{'LONGNAME'}	= 'neon_error';
+	$param_info{'ALKALI'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'ALKALI'}{'LONGNAME'}	= 'alkalinity';
+	$param_info{'FCO2'}{'C_FORMAT'}		= '%8.1f';
+	$param_info{'FCO2'}{'LONGNAME'}		= 'fugacity_co2';
+	$param_info{'TCO2TMP'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'TCO2TMP'}{'LONGNAME'}	= 'total_co2_temperature';
+	$param_info{'FCO2TMP'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'FCO2TMP'}{'LONGNAME'}	= 'fugacity_co2_temperature';
+	$param_info{'PHTEMP'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PHTEMP'}{'LONGNAME'}	= 'phtemp';
+	$param_info{'AR-39'}{'C_FORMAT'}	= '%8.1f';
+	$param_info{'AR-39'}{'LONGNAME'}	= '39_argon';
+	$param_info{'RA-226'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'RA-226'}{'LONGNAME'}	= '226_radium';
+	$param_info{'CS-137'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'CS-137'}{'LONGNAME'}	= '137_cesium';
+	$param_info{'IODIDE'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'IODIDE'}{'LONGNAME'}	= 'iodide';
+	$param_info{'CH4'}{'C_FORMAT'}		= '%8.2f';
+	$param_info{'CH4'}{'LONGNAME'}		= 'methane';
+	$param_info{'N2O'}{'C_FORMAT'}		= '%8.2f';
+	$param_info{'N2O'}{'LONGNAME'}		= 'nitrous_oxide';
+	$param_info{'PPHYTN'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PPHYTN'}{'LONGNAME'}	= 'phaeophytin';
+	$param_info{'MCHFRM'}{'C_FORMAT'}	= '%8.3f';
+	$param_info{'MCHFRM'}{'LONGNAME'}	= 'mchfrm';
+	$param_info{'OXYNIT'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'OXYNIT'}{'LONGNAME'}	= 'oxynit';
+	$param_info{'PHAEO'}{'C_FORMAT'}	= '%8.2f';
+	$param_info{'PHAEO'}{'LONGNAME'}	= 'phaeo';
+        $param_info{'BARIUM'}{'C_FORMAT'}       = '%f';
+        $param_info{'BARIUM'}{'LONGNAME'}       = 'barium';
+        $param_info{'POC'}{'C_FORMAT'}          = '%f';
+        $param_info{'POC'}{'LONGNAME'}          = 'particulate_organic_carbon';
+        $param_info{'PON'}{'C_FORMAT'}          = '%f';
+        $param_info{'PON'}{'LONGNAME'}          = 'particulate_organic_nitrogen';
+        $param_info{'BACT'}{'C_FORMAT'}         = '%f';
+        $param_info{'BACT'}{'LONGNAME'}         = 'abundance_of_bacteria';
+        $param_info{'DOC'}{'C_FORMAT'}          = '%f';
+        $param_info{'DOC'}{'LONGNAME'}          = 'dissolved_organic_carbon';
+        $param_info{'COMON'}{'C_FORMAT'}        = '%f';
+        $param_info{'COMON'}{'LONGNAME'}        = 'carbon_monoxide';
+	$param_info{'TOC'}{'C_FORMAT'}       	= '%8.2f';
+        $param_info{'TOC'}{'LONGNAME'}        	= 'total_organic_carbon';	
+	$param_info{'TON'}{'C_FORMAT'}       	= '%8.2f';
+        $param_info{'TON'}{'LONGNAME'}        	= 'TON';
+	$param_info{'FCO2IN'}{'C_FORMAT'}      	= '%8.1f';
+        $param_info{'FCO2IN'}{'LONGNAME'}       = 'fugacity_of_CO2_measured_at_in_situ_temperature';	
+	$param_info{'FCO220C'}{'C_FORMAT'}      = '%8.1f';
+        $param_info{'FCO220C'}{'LONGNAME'}      = 'fugacity_of_CO2_measured_at_20C';
+	$param_info{'STHETA'}{'C_FORMAT'}      	= '%8.4f';
+        $param_info{'STHETA'}{'LONGNAME'}      	= 'STHETA';
+	$param_info{'TALK'}{'C_FORMAT'}      	= '%8.4f';
+        $param_info{'TALK'}{'LONGNAME'}      	= 'total_alkalinity';
+	$param_info{'SF6'}{'C_FORMAT'}      	= '%8.2f';
+        $param_info{'SF6'}{'LONGNAME'}      	= 'sulphurhexaflouride';
+	$param_info{'BARIUM'}{'C_FORMAT'}      	= '%8.1f';
+        $param_info{'BARIUM'}{'LONGNAME'}      	= 'barium';
+	$param_info{'I-129'}{'C_FORMAT'}      	= '%8.2f';
+        $param_info{'I-129'}{'LONGNAME'}      	= 'iodine_isotope_129';
+	$param_info{'I129ER'}{'C_FORMAT'}      	= '%8.1f';
+        $param_info{'I129ER'}{'LONGNAME'}      	= 'iodine_isotope_129_error';
+	$param_info{'TDN'}{'C_FORMAT'}      	= '%8.2f';
+        $param_info{'TDN'}{'LONGNAME'}      	= 'total_dissolved_nitrogen';
+	$param_info{'PROC'}{'C_FORMAT'}      	= '%8.2f';
+        $param_info{'PROC'}{'LONGNAME'}      	= 'prochlorophytes';
+	$param_info{'SYNN'}{'C_FORMAT'}      	= '%8.2f';
+        $param_info{'SYNN'}{'LONGNAME'}      	= 'synechococcus';
+	$param_info{'REFTEMP'}{'C_FORMAT'}      = '%9.4f';
+        $param_info{'REFTEMP'}{'LONGNAME'}      = 'reference_temperature';
+	$param_info{'PH_SWS'}{'C_FORMAT'}	= '%9.4f';
+        $param_info{'PH_SWS'}{'LONGNAME'}	= 'pH_referred_to_seawater_scale';
+	$param_info{'PH_TOT'}{'C_FORMAT'}	= '%9.4f';
+        $param_info{'PH_TOT'}{'LONGNAME'}	= 'pH_referred_to_total_scale';
+	$param_info{'PH_TEMP'}{'C_FORMAT'}      = '%9.2f';
+        $param_info{'PH_TEMP'}{'LONGNAME'}      = 'pH_tempearture';
+	$param_info{'O18O16'}{'C_FORMAT'}	= '%8.2f';
+        $param_info{'O18O16'}{'LONGNAME'}	= '18O/16O ratio';
+	$param_info{'BTL_LAT'}{'C_FORMAT'}      = '%s';
+        $param_info{'BTL_LAT'}{'LONGNAME'}      = 'btl_lat';
+	$param_info{'BTL_LON'}{'C_FORMAT'}      = '%s';
+        $param_info{'BTL_LON'}{'LONGNAME'}      = 'btl_lon';
+	
+	#foreach $k (sort keys %param_info)      {
+	#
+	#        print STDOUT "$k\n";
+	#        foreach  $type  ( qw (C_FORMAT LONGNAME))       {
+	#
+	#                print STDOUT "\t--> ", 
+	#			$param_info{$k}{$type}, "\n";
+	#        }
+	#
+	#}
+	%rethash = %param_info;
+}
+1;

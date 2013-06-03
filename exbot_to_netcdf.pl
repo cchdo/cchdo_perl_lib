@@ -1,6 +1,6 @@
-#!/usr/bin/perl -w
+#!/opt/local/bin/perl -w
 #-----------------------------------------------------------------
-# EXCTD_TO_NETCDF:	
+# EXBOT_TO_NETCDF:	
 #		a Perl script that reads in and decode a WHP-BOTTLE
 #		exchange formatted file and places all of the data
 #		into a structure ready to be written into a NetCDF file.
@@ -13,6 +13,7 @@
 #					since 01-01-1980' to match
 #					the time coordinates of the
 #					other WOCE DACS.
+#       M. Shen:        2011-11-02      change perl to /opt/local
 #-----------------------------------------------------------------
 
 my $code_directory = 
@@ -62,15 +63,14 @@ foreach my $k (sort keys %input_hash)	{
 
 @input_lines = @{ $input_hash{'FILE_DATA'}};
 
-for ($i=0 ; $i <= $#input_lines ; $i++)	{
+my $i = 0; # The current file line being read.
 
-	#just get the 1st line and '#' headers
-	if ( ($i==0) or ($input_lines[$i] =~ /^#/) )	{
-		push(@original_header, $input_lines[$i]);
-	} else						{
-		last;
-	}
+# Read the comment lines plus the original header
+while ($i <= $#input_lines and $input_lines[$i] =~ /^(#|BOTTLE)/) {
+  push(@original_header, $input_lines[$i]);
+  $i++;
 }
+
 print STDOUT "\$i = $i\n";
 print STDOUT "----\nOG HEADER:\n",
 	join("\n ++", @original_header), "\n";

@@ -38,7 +38,8 @@ sub getParams {
     my %paramHash;
     my @paramArray;
 
-    open( PARAMFILE, "/usr/local/cchdo_perl_lib/hyd_cdom/exchangeParams.txt" )
+    #open( PARAMFILE, "/usr/local/cchdo_perl_lib/hyd_cdom/exchangeParams.txt" )
+    open( PARAMFILE, "/usr/local/cchdo_perl_lib/hyd/exchangeParams.txt" )
       or die("Can't find exchangeParams.txt -> $!");
 
     chomp( my @params = <PARAMFILE> );
